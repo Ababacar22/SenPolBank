@@ -8,6 +8,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthProxyModule } from './auth/auth-proxy.module';
+import { UserProxyModule } from './user/user-proxy.module';
 
 @Module({
   imports: [
@@ -16,8 +17,8 @@ import { AuthProxyModule } from './auth/auth-proxy.module';
       envFilePath: '../../.env',
     }),
     AuthProxyModule,
+    UserProxyModule,
     // Les futurs modules seront ajoutés ici :
-    // UserProxyModule,
     // FraudProxyModule,
     // PoliceProxyModule,
     // BankProxyModule,

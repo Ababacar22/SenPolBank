@@ -15,6 +15,10 @@
     "desktop/*"
   ],
   "scripts": {
+    "start:auth": "npm run start:dev -w @senpolbank/auth-service",
+    "start:user": "npm run start:dev -w @senpolbank/user-service",
+    "start:gateway": "npm run start:dev --prefix backend/api-gateway",
+    "start:all": "concurrently \"npm:start:gateway\" \"npm:start:auth\" \"npm:start:user\"",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f"
@@ -22,5 +26,8 @@
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=9.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }
