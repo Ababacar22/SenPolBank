@@ -1,0 +1,94 @@
+# ============================================
+# SenPolBank — Docker Compose (Développement)
+# ============================================
+# Lance les services d'infrastructure nécessaires
+# au développement local des microservices.
+#
+# Usage :
+#   docker compose up -d
+#   docker compose ps
+#   docker compose logs -f
+#   docker compose down
+# ============================================
+
+services:
+  # ── PostgreSQL ──────────────────────────────
+  # Base de données relationnelle principale
+  # Utilisée par : auth, user, fraud, police, bank services
+  postgres:
+    image: postgres:16-alpine
+    container_name: senpolbank-postgres
+    restart: unless-stopped
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-senpolbank}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme_postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-senpolbank}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - senpolbank-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-senpolbank}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis ───────────────────────────────────
+  # Cache et message broker
+  # Utilisé par : auth (sessions/tokens), emergency-engine (pub/sub)
+  redis:
+    image: redis:7-alpine
+    container_name: senpolbank-redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    command: redis-server --requirepass ${REDIS_PASSWORD:-changeme_redis}
+    volumes:
+      - redis_data:/data
+    networks:
+      - senpolbank-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-changeme_redis}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── MongoDB ─────────────────────────────────
+  # Base de données document
+  # Utilisé par : audit-service (logs), fraud-service (pièces jointes)
+  mongodb:
+    image: mongo:7
+    container_name: senpolbank-mongodb
+    restart: unless-stopped
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-senpolbank}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-changeme_mongo}
+      MONGO_INITDB_DATABASE: ${MONGO_DB:-senpolbank_audit}
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - senpolbank-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+# ── Volumes ─────────────────────────────────
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  mongo_data:
+    driver: local
+
+# ── Réseau ──────────────────────────────────
+networks:
+  senpolbank-network:
+    driver: bridge
+    name: senpolbank-network

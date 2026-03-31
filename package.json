@@ -1,0 +1,26 @@
+{
+  "name": "senpolbank",
+  "version": "0.1.0",
+  "private": true,
+  "description": "🛡️ Plateforme SaaS de communication sécurisée entre citoyens, police et banques pour bloquer les fraudes bancaires en temps réel.",
+  "license": "MIT",
+  "author": "SenPolBank Contributors",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ababacar22/SenPolBank.git"
+  },
+  "workspaces": [
+    "backend/*",
+    "frontend/*",
+    "desktop/*"
+  ],
+  "scripts": {
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
