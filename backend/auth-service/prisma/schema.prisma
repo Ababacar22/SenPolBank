@@ -1,0 +1,57 @@
+// ==============================================
+// SenPolBank — Auth Service — Prisma Schema
+// ==============================================
+// Ce fichier définit le modèle de données pour
+// l'authentification. Prisma génère automatiquement
+// le client TypeScript et les migrations SQL.
+//
+// POURQUOI Prisma ?
+// - Type-safe : les requêtes sont vérifiées à la compilation
+// - Migrations : gestion automatique du schéma SQL
+// - Studio : interface web pour explorer la BDD
+// ==============================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Rôles disponibles dans la plateforme SenPolBank
+/// - CITIZEN : citoyen qui signale des fraudes
+/// - POLICE  : agent de police qui valide les plaintes
+/// - BANK    : opérateur bancaire qui bloque les comptes
+/// - ADMIN   : administrateur système
+enum Role {
+  CITIZEN
+  POLICE
+  BANK
+  ADMIN
+}
+
+/// Modèle principal des utilisateurs
+/// Stocke les credentials et les métadonnées de session
+model User {
+  id        String @id @default(uuid()) /// Identifiant unique UUID v4
+  email     String @unique              /// Email unique, utilisé comme login
+  password  String                      /// Hash bcrypt du mot de passe
+
+  firstName String @map("first_name")   /// Prénom
+  lastName  String @map("last_name")    /// Nom de famille
+
+  role      Role   @default(CITIZEN)    /// Rôle de l'utilisateur
+  isActive  Boolean @default(true) @map("is_active") /// Compte actif/désactivé
+
+  /// Token de refresh hashé (null si déconnecté)
+  /// Stocké hashé pour la sécurité — même si la BDD est compromise,
+  /// les refresh tokens ne sont pas utilisables directement
+  refreshToken String? @map("refresh_token")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users") // Nom de la table en snake_case (convention PostgreSQL)
+}
