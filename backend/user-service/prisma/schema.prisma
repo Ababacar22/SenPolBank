@@ -40,6 +40,14 @@ enum KycStatus {
   REJECTED    // Document rejeté
 }
 
+/// Statut d'un signalement de fraude
+enum FraudStatus {
+  PENDING_POLICE // Signalé par citoyen, en attente validation police
+  PENDING_BANK   // Validé par police, en attente d'action banque
+  RESOLVED       // Traité et clôturé par la banque
+  REJECTED       // Rejeté (plainte non valide ou erreur)
+}
+
 /// Modèle principal des utilisateurs
 /// Stocke les credentials et les métadonnées de session
 model User {
@@ -62,8 +70,33 @@ model User {
   /// les refresh tokens ne sont pas utilisables directement
   refreshToken String? @map("refresh_token")
 
+  /// Relations
+  reportedFrauds FraudReport[] @relation("CitizenReportedFrauds")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("users") // Nom de la table en snake_case (convention PostgreSQL)
+}
+
+/// Alertes et signalements de fraudes
+model FraudReport {
+  id              String      @id @default(uuid())
+  title           String      /// Titre court du signalement
+  description     String      /// Description détaillée de la fraude
+  bankName        String      @map("bank_name")    /// Nom de la banque impliquée
+  bankAccount     String      @map("bank_account") /// IBAN ou no de compte concerné
+  amount          Float?      /// Montant estimé de la fraude
+  
+  status          FraudStatus @default(PENDING_POLICE)
+
+  citizenId       String      @map("citizen_id")
+  citizen         User        @relation("CitizenReportedFrauds", fields: [citizenId], references: [id])
+  
+  policeId        String?     @map("police_id") // Agent de police ayant pris / validé le dossier
+  
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+
+  @@map("fraud_reports")
 }

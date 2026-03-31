@@ -9,6 +9,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthProxyModule } from './auth/auth-proxy.module';
 import { UserProxyModule } from './user/user-proxy.module';
+import { FraudProxyModule } from './fraud/fraud-proxy.module';
 
 @Module({
   imports: [
@@ -18,8 +19,8 @@ import { UserProxyModule } from './user/user-proxy.module';
     }),
     AuthProxyModule,
     UserProxyModule,
+    FraudProxyModule,
     // Les futurs modules seront ajoutés ici :
-    // FraudProxyModule,
     // PoliceProxyModule,
     // BankProxyModule,
   ],

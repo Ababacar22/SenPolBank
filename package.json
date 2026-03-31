@@ -17,8 +17,9 @@
   "scripts": {
     "start:auth": "npm run start:dev -w @senpolbank/auth-service",
     "start:user": "npm run start:dev -w @senpolbank/user-service",
+    "start:fraud": "npm run start:dev -w @senpolbank/fraud-service",
     "start:gateway": "npm run start:dev --prefix backend/api-gateway",
-    "start:all": "concurrently \"npm:start:gateway\" \"npm:start:auth\" \"npm:start:user\"",
+    "start:all": "concurrently \"npm:start:gateway\" \"npm:start:auth\" \"npm:start:user\" \"npm:start:fraud\"",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f"
