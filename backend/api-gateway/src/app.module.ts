@@ -11,6 +11,7 @@ import { AuthProxyModule } from './auth/auth-proxy.module';
 import { UserProxyModule } from './user/user-proxy.module';
 import { FraudProxyModule } from './fraud/fraud-proxy.module';
 import { PoliceProxyModule } from './police/police-proxy.module';
+import { BankProxyModule } from './bank/bank-proxy.module';
 
 @Module({
   imports: [
@@ -22,8 +23,7 @@ import { PoliceProxyModule } from './police/police-proxy.module';
     UserProxyModule,
     FraudProxyModule,
     PoliceProxyModule,
-    // Les futurs modules seront ajoutés ici :
-    // BankProxyModule,
+    BankProxyModule,
   ],
 })
 export class AppModule {}

@@ -19,8 +19,9 @@
     "start:user": "npm run start:dev -w @senpolbank/user-service",
     "start:fraud": "npm run start:dev -w @senpolbank/fraud-service",
     "start:police": "npm run start:dev -w @senpolbank/police-service",
+    "start:bank": "npm run start:dev -w @senpolbank/bank-service",
     "start:gateway": "npm run start:dev --prefix backend/api-gateway",
-    "start:all": "concurrently \"npm:start:gateway\" \"npm:start:auth\" \"npm:start:user\" \"npm:start:fraud\" \"npm:start:police\"",
+    "start:all": "concurrently \"npm:start:gateway\" \"npm:start:auth\" \"npm:start:user\" \"npm:start:fraud\" \"npm:start:police\" \"npm:start:bank\"",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f"

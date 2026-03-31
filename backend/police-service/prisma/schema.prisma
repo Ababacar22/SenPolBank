@@ -98,6 +98,9 @@ model FraudReport {
   rejectionReason String?     @map("rejection_reason")  /// Motif de rejet
   validatedAt     DateTime?   @map("validated_at")      /// Date de validation par la police
   
+  bankNote        String?     @map("bank_note")         /// Note de l'opérateur bancaire
+  resolvedAt      DateTime?   @map("resolved_at")       /// Date de résolution/blocage
+  
   createdAt       DateTime    @default(now()) @map("created_at")
   updatedAt       DateTime    @updatedAt @map("updated_at")
 
